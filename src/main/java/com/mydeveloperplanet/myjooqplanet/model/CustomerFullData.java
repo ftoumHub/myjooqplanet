@@ -1,22 +1,18 @@
-package com.mydeveloperplanet.myjooqplanet;
+package com.mydeveloperplanet.myjooqplanet.model;
 
-public class Customer {
-    private long id;
-    private String firstName, lastName, country;
+public class CustomerFullData {
 
-    @Override
-    public String toString() {
-        return String.format(
-                "Customer[id=%d, firstName='%s', lastName='%s', country='%s']",
-                id, firstName, lastName, country);
+    private long customerId;
+    private String firstName;
+    private String lastName;
+    private String country;
+
+    public long getCustomerId() {
+        return customerId;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
     }
 
     public String getFirstName() {

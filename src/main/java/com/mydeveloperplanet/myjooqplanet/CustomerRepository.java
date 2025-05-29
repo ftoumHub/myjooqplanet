@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.mydeveloperplanet.myjooqplanet.jooq.tables.records.CustomerRecord;
 
+import com.mydeveloperplanet.myjooqplanet.model.Customer;
 import org.jooq.DSLContext;
 import org.jooq.Records;
 import org.springframework.stereotype.Repository;
@@ -19,18 +20,23 @@ public class CustomerRepository {
         this.create = create;
     }
 
-    public void addCustomer(final Customer customer) {
-        create.insertInto(CUSTOMER, CUSTOMER.FIRST_NAME, CUSTOMER.LAST_NAME, CUSTOMER.COUNTRY)
+    public CustomerRecord addCustomer(final Customer customer) {
+        return create.insertInto(CUSTOMER, CUSTOMER.FIRST_NAME, CUSTOMER.LAST_NAME, CUSTOMER.COUNTRY)
                 .values(customer.getFirstName(), customer.getLastName(), customer.getCountry())
-                .execute();
+                .returning(CUSTOMER.ID, CUSTOMER.FIRST_NAME, CUSTOMER.LAST_NAME, CUSTOMER.COUNTRY)
+                .fetchOne(Records.mapping(CustomerRecord::new));
     }
 
     public CustomerRecord getCustomer(int customerId) {
-        return create.selectFrom(CUSTOMER).where(CUSTOMER.ID.eq(customerId)).fetchOne(Records.mapping(CustomerRecord::new));
+        return create
+                .selectFrom(CUSTOMER)
+                .where(CUSTOMER.ID.eq(customerId))
+                .fetchOne(Records.mapping(CustomerRecord::new));
     }
 
     public List<CustomerRecord> getAllCustomers() {
-        return create.selectFrom(CUSTOMER)
+        return create
+                .selectFrom(CUSTOMER)
                 .fetch(Records.mapping(CustomerRecord::new));
     }
 

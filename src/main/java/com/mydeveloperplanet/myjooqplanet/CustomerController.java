@@ -3,16 +3,15 @@ package com.mydeveloperplanet.myjooqplanet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mydeveloperplanet.myjooqplanet.api.CustomersApi;
 import com.mydeveloperplanet.myjooqplanet.jooq.tables.records.CustomerRecord;
 import com.mydeveloperplanet.myjooqplanet.model.Customer;
 import com.mydeveloperplanet.myjooqplanet.model.CustomerFullData;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class CustomerController implements CustomersApi {
+public class CustomerController {
 
     public final CustomerRepository customerRepository;
 
@@ -20,38 +19,24 @@ public class CustomerController implements CustomersApi {
         this.customerRepository = customerRepository;
     }
 
-    @Override
-    public ResponseEntity<Void> createCustomer(Customer apiCustomer) {
-        com.mydeveloperplanet.myjooqplanet.Customer customer = new com.mydeveloperplanet.myjooqplanet.Customer();
-        customer.setFirstName(apiCustomer.getFirstName());
-        customer.setLastName(apiCustomer.getLastName());
-        customer.setCountry(apiCustomer.getCountry());
-
-        customerRepository.addCustomer(customer);
-
-        return ResponseEntity.ok().build();
+    @PostMapping("/customers")
+    public ResponseEntity<CustomerFullData> createCustomer(@RequestBody Customer customer) {
+        return ResponseEntity
+                .ok()
+                .body(repoToApi(customerRepository.addCustomer(customer)));
     }
 
-    @Override
+    @GetMapping("/customers")
     public ResponseEntity<List<CustomerFullData>> getCustomers() {
-        List<CustomerRecord> customers = customerRepository.getAllCustomers();
-
-        List<CustomerFullData> convertedCustomers = convertToCustomerFullData(customers);
-        return ResponseEntity.ok(convertedCustomers);
+        return ResponseEntity
+                .ok(customerRepository.getAllCustomers().stream().map(this::repoToApi).toList());
     }
 
-    @Override
-    public ResponseEntity<CustomerFullData> getCustomer(Long customerId) {
-        CustomerRecord customer = customerRepository.getCustomer(customerId.intValue());
-        return ResponseEntity.ok(repoToApi(customer));
-    }
-
-    private List<CustomerFullData> convertToCustomerFullData(List<CustomerRecord> customers) {
-        List<CustomerFullData> fullData = new ArrayList<>();
-        for (CustomerRecord customer : customers) {
-            fullData.add(repoToApi(customer));
-        }
-        return fullData;
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<CustomerFullData> getCustomer(@PathVariable Long customerId) {
+        var customer = customerRepository.getCustomer(customerId.intValue());
+        return ResponseEntity
+                .ok(repoToApi(customer));
     }
 
     private CustomerFullData repoToApi(CustomerRecord customer) {
