@@ -1,12 +1,12 @@
-package com.mydeveloperplanet.myjooqplanet;
+package com.mydeveloperplanet.myjooqplanet.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.mydeveloperplanet.myjooqplanet.jooq.tables.records.CustomerRecord;
 import com.mydeveloperplanet.myjooqplanet.model.Customer;
 import com.mydeveloperplanet.myjooqplanet.model.CustomerFullData;
 
+import com.mydeveloperplanet.myjooqplanet.repository.CustomerRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.mydeveloperplanet.myjooqplanet;
+package com.mydeveloperplanet.myjooqplanet.repository;
 
 import static com.mydeveloperplanet.myjooqplanet.jooq.tables.Customer.CUSTOMER;
 

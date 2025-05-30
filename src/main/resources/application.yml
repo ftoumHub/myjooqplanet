@@ -1,0 +1,16 @@
+logging:
+  level:
+    org.jooq.tools.LoggerListener: DEBUG
+    org.jooq: DEBUG
+
+spring:
+  application:
+    name: MyJooqPlanet
+  docker:
+    compose:
+      lifecycle-management: start-only
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-root.xml
+
+server:
+  port: 8181
